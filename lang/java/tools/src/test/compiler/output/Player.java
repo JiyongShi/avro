@@ -8,6 +8,7 @@ package avro.examples.baseball;
 import org.apache.avro.specific.SpecificData;
 import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.BinaryMessageDecoder;
+import org.apache.avro.message.SchemaStore;
 
 @SuppressWarnings("all")
 /** 選手 is Japanese for player. */
@@ -24,6 +25,21 @@ public class Player extends org.apache.avro.specific.SpecificRecordBase implemen
 
   private static final BinaryMessageDecoder<Player> DECODER =
       new BinaryMessageDecoder<Player>(MODEL$, SCHEMA$);
+
+  /**
+   * Return the BinaryMessageDecoder instance used by this class.
+   */
+  public static BinaryMessageDecoder<Player> getDecoder() {
+    return DECODER;
+  }
+
+  /**
+   * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
+   * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
+   */
+  public static BinaryMessageDecoder<Player> createDecoder(SchemaStore resolver) {
+    return new BinaryMessageDecoder<Player>(MODEL$, SCHEMA$, resolver);
+  }
 
   /** Serializes this Player to a ByteBuffer. */
   public java.nio.ByteBuffer toByteBuffer() throws java.io.IOException {
@@ -203,19 +219,19 @@ public class Player extends org.apache.avro.specific.SpecificRecordBase implemen
       super(other);
       if (isValidValue(fields()[0], other.number)) {
         this.number = data().deepCopy(fields()[0].schema(), other.number);
-        fieldSetFlags()[0] = true;
+        fieldSetFlags()[0] = other.fieldSetFlags()[0];
       }
       if (isValidValue(fields()[1], other.first_name)) {
         this.first_name = data().deepCopy(fields()[1].schema(), other.first_name);
-        fieldSetFlags()[1] = true;
+        fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
       if (isValidValue(fields()[2], other.last_name)) {
         this.last_name = data().deepCopy(fields()[2].schema(), other.last_name);
-        fieldSetFlags()[2] = true;
+        fieldSetFlags()[2] = other.fieldSetFlags()[2];
       }
       if (isValidValue(fields()[3], other.position)) {
         this.position = data().deepCopy(fields()[3].schema(), other.position);
-        fieldSetFlags()[3] = true;
+        fieldSetFlags()[3] = other.fieldSetFlags()[3];
       }
     }
 
