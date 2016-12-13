@@ -72,7 +72,7 @@ namespace Avro.Test.Utils
             Assert.True(Eq(result, expectedOutput), Pr(result));
         }
 
-        private List<Object[]> OutputTestCases()
+        private static List<Object[]> OutputTestCases()
         {
             List<Object[]> result = new List<Object[]>();
             result.Add(new Object[] { "", "foo", new List<object[]> { } });

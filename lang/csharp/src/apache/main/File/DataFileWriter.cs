@@ -190,7 +190,7 @@ namespace Avro.File
             EnsureHeader();
             Flush();
             _stream.Flush();
-            _stream.Close();
+            _stream.Dispose();
             _isOpen = false;
         }
 

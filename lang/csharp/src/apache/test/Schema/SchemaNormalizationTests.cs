@@ -18,10 +18,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using System.IO;
+using System.Reflection;
 using Avro.Test.Utils;
 using Avro;
 
@@ -50,17 +52,35 @@ namespace Avro.Test
 
         private static List<object[]> ProvideFingerprintTestCases()
         {
-            using (StreamReader reader = new StreamReader("../../../../../share/test/data/schema-tests.txt"))
+#if NET35 || NET40 || NET45 || NET46
+            using (var fs = new FileStream(Path.Combine(AppContext.BaseDirectory, "../../../../../../../../../share/test/data/schema-tests.txt"), FileMode.Open))
+#else
+            var testDllPath = Path.GetDirectoryName(typeof(SchemaNormalizationTests).GetTypeInfo().Assembly.Location);
+            Directory.SetCurrentDirectory(testDllPath);
+            using (var fs = new FileStream(Path.Combine(AppContext.BaseDirectory, "../../../../../../../../share/test/data/schema-tests.txt"), FileMode.Open))
+#endif
             {
-                return CaseFinder.Find(reader, "fingerprint", new List<object[]>());
+                using (StreamReader reader = new StreamReader(fs))
+                {
+                    return CaseFinder.Find(reader, "fingerprint", new List<object[]>());
+                }
             }
         }
 
         private static List<object[]> ProvideCanonicalTestCases()
         {
-            using (StreamReader reader = new StreamReader("../../../../../share/test/data/schema-tests.txt"))
+#if NET35 || NET40 || NET45 || NET46
+            using (var fs = new FileStream(Path.Combine(AppContext.BaseDirectory, "../../../../../../../../../share/test/data/schema-tests.txt"), FileMode.Open))
+#else
+            var testDllPath = Path.GetDirectoryName(typeof(SchemaNormalizationTests).GetTypeInfo().Assembly.Location);
+            Directory.SetCurrentDirectory(testDllPath);
+            using (var fs = new FileStream(Path.Combine(AppContext.BaseDirectory, "../../../../../../../../share/test/data/schema-tests.txt"), FileMode.Open))
+#endif
             {
-                return CaseFinder.Find(reader, "canonical", new List<object[]>());
+                using (StreamReader reader = new StreamReader(fs))
+                {
+                    return CaseFinder.Find(reader, "canonical", new List<object[]>());
+                }
             }
         }
 
@@ -78,7 +98,7 @@ namespace Avro.Test
                 for (int j = 1; j < 129; j = j << 1)
                 {
                     bool overflow = (0 != (fp & overflowBit));
-                    fp = (long) (((ulong) fp) >> 1);
+                    fp = (long)(((ulong)fp) >> 1);
                     if (0 != (j & b[i]))
                     {
                         fp |= One;

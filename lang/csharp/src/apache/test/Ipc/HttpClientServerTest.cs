@@ -1,4 +1,5 @@
-﻿/**
+﻿#if NET35 || NET40 || NET45 || NET46
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -88,3 +89,4 @@ namespace Avro.Test.Ipc
         }
     }
 }
+#endif

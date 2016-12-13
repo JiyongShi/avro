@@ -233,10 +233,10 @@ namespace Avro.Generic
         protected virtual void WriteArray(ArraySchema schema, object value, Encoder encoder)
         {
             EnsureArrayObject(value);
-            long l = GetArrayLength(value);
+            var l = GetArrayLength(value);
             encoder.WriteArrayStart();
             encoder.SetItemCount(l);
-            for (long i = 0; i < l; i++)
+            for (var i = 0; i < l; i++)
             {
                 encoder.StartItem();
                 Write(schema.ItemSchema, GetArrayElement(value, i), encoder);
@@ -262,7 +262,7 @@ namespace Avro.Generic
         /// </summary>
         /// <param name="value">The object whose array length is required</param>
         /// <returns>The array length of the given object</returns>
-        protected virtual long GetArrayLength(object value)
+        protected virtual int GetArrayLength(object value)
         {
             return (value as Array).Length;
         }
@@ -276,7 +276,7 @@ namespace Avro.Generic
         /// <param name="value">The array object</param>
         /// <param name="index">The index to look for</param>
         /// <returns>The array element at the index</returns>
-        protected virtual object GetArrayElement(object value, long index)
+        protected virtual object GetArrayElement(object value, int index)
         {
             return (value as Array).GetValue(index);
         }

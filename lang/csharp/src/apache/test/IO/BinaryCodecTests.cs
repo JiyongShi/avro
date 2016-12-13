@@ -60,7 +60,7 @@ namespace Avro.Test
             T actual = r(d);
             Assert.AreEqual(t, actual);
             Assert.AreEqual(-1, iostr.ReadByte());
-            iostr.Close();
+            iostr.Dispose();
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Avro.Test
             Decoder d = new BinaryDecoder(iostr);
             s(d);
             Assert.AreEqual(-1, iostr.ReadByte());
-            iostr.Close();
+            iostr.Dispose();
         }
 
 

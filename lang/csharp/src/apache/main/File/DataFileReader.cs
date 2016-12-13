@@ -22,6 +22,7 @@ using System.IO;
 using Avro.Generic;
 using Avro.IO;
 using Avro.Specific;
+using System.Reflection;
 
 namespace Avro.File
 {
@@ -260,7 +261,7 @@ namespace Avro.File
 
         public void Dispose()
         {
-            _stream.Close();
+            _stream.Dispose();
         }
 
         private void Init(Stream stream)

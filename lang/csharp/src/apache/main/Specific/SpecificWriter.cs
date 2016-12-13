@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Avro;
 using Avro.IO;
 using Avro.Generic;
@@ -198,7 +199,11 @@ namespace Avro.Specific
                     return obj is ISpecificRecord && 
                            (((obj as ISpecificRecord).Schema) as RecordSchema).SchemaName.Equals((sc as RecordSchema).SchemaName);
                 case Schema.Type.Enumeration:
+#if NET35 || NET40 || NET45 || NET46
                     return obj.GetType().IsEnum && (sc as EnumSchema).Symbols.Contains(obj.ToString());
+#else
+                    return obj.GetType().GetTypeInfo().IsEnum && (sc as EnumSchema).Symbols.Contains(obj.ToString());
+#endif
                 case Schema.Type.Array:
                     return obj is System.Collections.IList;
                 case Schema.Type.Map:

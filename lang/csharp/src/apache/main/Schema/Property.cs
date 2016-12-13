@@ -44,7 +44,10 @@ namespace Avro
                 if (ReservedProps.Contains(prop.Name))
                     continue;
                 if (!ContainsKey(prop.Name))
-                    Add(prop.Name, prop.Value.ToString());
+                    if (System.Text.RegularExpressions.Regex.IsMatch(prop.Value.ToString(), "\\\".+\\\""))
+                        Add(prop.Name, prop.Value.ToString());
+                    else
+                        Add(prop.Name, "\"" + prop.Value + "\"");
             }
         }
 

@@ -19,7 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+#if NET35 || NET40 || NET45 || NET46
 using System.CodeDom;
+#endif
 
 namespace Avro
 {
@@ -31,8 +33,10 @@ namespace Avro
         private static readonly CodeGenUtil instance = new CodeGenUtil();
         public static CodeGenUtil Instance { get { return instance; } }
 
+#if NET35 || NET40 || NET45 || NET46
         public CodeNamespaceImport[] NamespaceImports { get; private set; }
         public CodeCommentStatement FileComment { get; private set; }
+#endif
         public HashSet<string> ReservedKeywords { get; private set; }
         private const char At = '@';
         private const char Dot = '.';
@@ -40,6 +44,7 @@ namespace Avro
 
         private CodeGenUtil()
         {
+#if NET35 || NET40 || NET45 || NET46
             NamespaceImports = new CodeNamespaceImport[] {
                 new CodeNamespaceImport("System"),
                 new CodeNamespaceImport("System.Collections.Generic"),
@@ -55,6 +60,7 @@ namespace Avro
     is regenerated
  </auto-generated>
  ------------------------------------------------------------------------------");
+#endif
 
             // Visual Studio 2010 http://msdn.microsoft.com/en-us/library/x53a06bb.aspx
             ReservedKeywords = new HashSet<string>() {

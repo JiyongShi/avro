@@ -54,7 +54,11 @@ namespace Avro.Specific
 
         private ObjectCreator()
         {
+#if NET35 || NET40 || NET45 || NET46
             execAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+#else
+            execAssembly = typeof(ObjectCreator).GetTypeInfo().Assembly;
+#endif
             entryAssembly = System.Reflection.Assembly.GetEntryAssembly();
             if (entryAssembly != null && execAssembly != entryAssembly) // entryAssembly returns null when running from NUnit
                 diffAssembly = true;
@@ -164,6 +168,51 @@ namespace Avro.Specific
         }
 
 
+#if NET35 || NET40 || NET45 || NET46
+#else
+        /// http://www.michael-whelan.net/replacing-appdomain-in-dotnet-core/
+        /// polyfill
+        public class AppDomain
+        {
+            public static AppDomain CurrentDomain { get; private set; }
+
+            static AppDomain()
+            {
+                CurrentDomain = new AppDomain();
+            }
+
+            public Assembly[] GetAssemblies()
+            {
+                var assemblies = new List<Assembly>();
+                var dependencies = Microsoft.Extensions.DependencyModel.DependencyContext.Default.RuntimeLibraries;
+                foreach (var library in dependencies)
+                {
+                    if (IsCandidateCompilationLibrary(library))
+                    {
+                        try
+                        {
+                            var assembly = Assembly.Load(new AssemblyName(library.Name));
+                            assemblies.Add(assembly);
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+                    }
+                }
+                return assemblies.ToArray();
+            }
+
+            private static bool IsCandidateCompilationLibrary(Microsoft.Extensions.DependencyModel.RuntimeLibrary compilationLibrary)
+            {
+                return true;
+                //return compilationLibrary.Name == ("Specify")
+                //    || compilationLibrary.Dependencies.Any(d => d.Name.StartsWith("Specify"));
+            }
+        }
+#endif
+
+
         /// <summary>
         /// Gets the type for the specified schema
         /// </summary>
@@ -209,13 +258,17 @@ namespace Avro.Specific
 
                         if (null != itemType ) 
                         {
+#if NET35 || NET40 || NET45 || NET46
                             if (itemType.IsValueType && !itemType.IsEnum)
+#else
+                            if (itemType.GetTypeInfo().IsValueType && !itemType.GetTypeInfo().IsEnum)
+#endif
                             {
-                                try
-                                {
-                                    return GenericNullableType.MakeGenericType(new [] {itemType});
-                                }
-                                catch (Exception) { }
+                            try
+                            {
+                                return GenericNullableType.MakeGenericType(new [] {itemType});
+                            }
+                            catch (Exception) { }
                             }
                             
                             return itemType;

@@ -18,17 +18,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
+#if NET35 || NET40 || NET45 || NET46
+using System.Reflection;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.IO;
+#endif
 
 namespace Avro
 {
     public class CodeGen
     {
+#if NET35 || NET40 || NET45 || NET46
         /// <summary>
         /// Object that contains all the generated types
         /// </summary>
@@ -647,6 +650,7 @@ namespace Avro
 
             return ctd;
         }
+#endif
 
         /// <summary>
         /// Gets the string representation of the schema's data type 
@@ -750,6 +754,7 @@ namespace Avro
             return ret;
         }
 
+#if NET35 || NET40 || NET45 || NET46
         /// <summary>
         /// Creates the static schema field for class types
         /// </summary>
@@ -851,5 +856,6 @@ namespace Avro
                 }
             }
         }
+#endif
     }
 }
