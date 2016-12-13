@@ -50,3 +50,7 @@
 
 #Test results
 TestResult.xml
+
+# .NET Core about
+project.lock.json
+.vs
