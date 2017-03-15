@@ -1,19 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Avro.codegen", "src\apache\codegen\Avro.codegen.xproj", "{204D1625-4D77-440B-A99A-5C801C58C36B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "codegen", "src\apache\codegen\codegen.csproj", "{204D1625-4D77-440B-A99A-5C801C58C36B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Avro.ipc", "src\apache\ipc\Avro.ipc.xproj", "{77D47F58-4AAA-4846-87A9-CFF31E0A7060}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ipc", "src\apache\ipc\ipc.csproj", "{77D47F58-4AAA-4846-87A9-CFF31E0A7060}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Avro.main", "src\apache\main\Avro.main.xproj", "{F72AB62E-05C6-4102-B9D1-7F727FFED73C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "main", "src\apache\main\main.csproj", "{F72AB62E-05C6-4102-B9D1-7F727FFED73C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Avro.msbuild", "src\apache\msbuild\Avro.msbuild.xproj", "{B63378CD-265B-451C-A0DC-73A9D92AF4C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "msbuild", "src\apache\msbuild\msbuild.csproj", "{B63378CD-265B-451C-A0DC-73A9D92AF4C4}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Avro.perf", "src\apache\perf\Avro.perf.xproj", "{A68CA762-D1B0-4B48-9248-B07189F3C8A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "perf", "src\apache\perf\perf.csproj", "{A68CA762-D1B0-4B48-9248-B07189F3C8A7}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Avro.test", "src\apache\test\Avro.test.xproj", "{87C3C263-6BFC-4266-B028-1D2E37A9CD56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "src\apache\test\test.csproj", "{87C3C263-6BFC-4266-B028-1D2E37A9CD56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

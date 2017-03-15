@@ -13,3 +13,4 @@ target
 /build
 test-output
 /dist
+obj/
