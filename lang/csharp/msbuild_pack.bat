@@ -1,2 +1,2 @@
-"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\amd64\MSBuild.exe" /t:pack /p:IncludeSymbols=true src\apache\main\main.csproj
-"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\amd64\MSBuild.exe" /t:pack /p:IncludeSymbols=true src\apache\main\main.csproj /p:Configuration=Release
+"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\amd64\MSBuild.exe" /t:pack /p:IncludeSymbols=true;IncludeSource=true src\apache\main\main.csproj
+"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\amd64\MSBuild.exe" /t:pack /p:IncludeSymbols=true;IncludeSource=true src\apache\main\main.csproj /p:Configuration=Release
