@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -54,7 +54,7 @@ namespace Avro.Specific
 
         private ObjectCreator()
         {
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
             execAssembly = System.Reflection.Assembly.GetExecutingAssembly();
 #else
             execAssembly = typeof(ObjectCreator).GetTypeInfo().Assembly;
@@ -168,7 +168,8 @@ namespace Avro.Specific
         }
 
 
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
+
 #else
         /// http://www.michael-whelan.net/replacing-appdomain-in-dotnet-core/
         /// polyfill
@@ -258,7 +259,7 @@ namespace Avro.Specific
 
                         if (null != itemType ) 
                         {
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
                             if (itemType.IsValueType && !itemType.IsEnum)
 #else
                             if (itemType.GetTypeInfo().IsValueType && !itemType.GetTypeInfo().IsEnum)

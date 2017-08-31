@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -130,7 +130,7 @@ namespace Avro.Specific
                     return obj is ISpecificRecord && 
                            (((obj as ISpecificRecord).Schema) as RecordSchema).SchemaName.Equals((sc as RecordSchema).SchemaName);
                 case Schema.Type.Enumeration:
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
                     return obj.GetType().IsEnum && (sc as EnumSchema).Symbols.Contains(obj.ToString());
 #else
                     return obj.GetType().GetTypeInfo().IsEnum && (sc as EnumSchema).Symbols.Contains(obj.ToString());

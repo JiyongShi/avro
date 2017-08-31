@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.8.1.4</Version>
+    <Version>1.8.1.5</Version>
     <TargetFrameworks>net46</TargetFrameworks>
     <AssemblyName>msbuild</AssemblyName>
     <PackageId>msbuild</PackageId>
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.1.548" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.3.409" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">

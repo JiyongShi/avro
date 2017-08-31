@@ -1,4 +1,4 @@
-﻿#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -43,7 +43,7 @@ namespace Avro.Test.Ipc
 
         const string URL = @"http://localhost:18080/avro/test/ipc/mailResponder/";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         //[TestInitialize]
         public void Init()
         {
@@ -59,7 +59,7 @@ namespace Avro.Test.Ipc
             proxy = new GenericRequestor(transceiver, MailResponder.Protocol);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         //[TestCleanup]
         public void Cleanup()
         {

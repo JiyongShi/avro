@@ -34,7 +34,7 @@ namespace Avro.Test.Ipc
         private SocketTransceiver transceiver;
         private GenericRequestor proxy;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Init()
         {
             mailResponder = new MailResponder();
@@ -46,7 +46,7 @@ namespace Avro.Test.Ipc
             proxy = new GenericRequestor(transceiver, MailResponder.Protocol);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Cleanup()
         {
             server.Stop();

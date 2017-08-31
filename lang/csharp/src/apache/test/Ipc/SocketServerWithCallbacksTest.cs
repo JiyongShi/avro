@@ -38,7 +38,7 @@ namespace Avro.Test.Ipc
         private SocketTransceiver transceiver;
         private SimpleCallback simpleClient;
         
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Init()
         {
             var responder = new SpecificResponder<Simple>(new SimpleImpl());
@@ -49,7 +49,7 @@ namespace Avro.Test.Ipc
             simpleClient = SpecificRequestor.CreateClient<SimpleCallback>(transceiver);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             try

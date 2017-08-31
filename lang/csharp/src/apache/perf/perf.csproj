@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.8.1.4</Version>
+    <Version>1.8.1.5</Version>
     <TargetFrameworks>net35;net40;net45;net46</TargetFrameworks>
     <AssemblyName>perf</AssemblyName>
     <OutputType>Exe</OutputType>
