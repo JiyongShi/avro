@@ -1,4 +1,4 @@
-﻿#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETCOREAPP2_0
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

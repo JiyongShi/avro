@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -36,7 +36,7 @@ namespace Avro.Test
         // multiple assemblies and so the type in the test and the type found by ObjectCreator
         // will differ.  This single CompilerResults only works so long as there is only one test.
         // If additional tests are added then each test will need its own CompilerResults.
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETCOREAPP2_0
         private static CompilerResults compres;
 
         [TestCase(@"{

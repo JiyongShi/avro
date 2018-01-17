@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
 using System.CodeDom;
 #endif
 
@@ -33,7 +33,7 @@ namespace Avro
         private static readonly CodeGenUtil instance = new CodeGenUtil();
         public static CodeGenUtil Instance { get { return instance; } }
 
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
         public CodeNamespaceImport[] NamespaceImports { get; private set; }
         public CodeCommentStatement FileComment { get; private set; }
 #endif
@@ -44,7 +44,7 @@ namespace Avro
 
         private CodeGenUtil()
         {
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
             NamespaceImports = new CodeNamespaceImport[] {
                 new CodeNamespaceImport("System"),
                 new CodeNamespaceImport("System.Collections.Generic"),

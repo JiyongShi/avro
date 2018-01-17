@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
 using System.Reflection;
 using System.CodeDom;
 using System.CodeDom.Compiler;
@@ -31,7 +31,7 @@ namespace Avro
 {
     public class CodeGen
     {
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
         /// <summary>
         /// Object that contains all the generated types
         /// </summary>
@@ -754,7 +754,7 @@ namespace Avro
             return ret;
         }
 
-#if NET35 || NET40 || NET45 || NET46
+#if NET35 || NET40 || NET45 || NET46 || NETSTANDARD2_0
         /// <summary>
         /// Creates the static schema field for class types
         /// </summary>
