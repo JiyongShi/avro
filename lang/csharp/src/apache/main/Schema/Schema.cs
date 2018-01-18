@@ -76,6 +76,12 @@ namespace Avro
         /// </summary>
         public abstract string Name { get; }
 
+
+        /// <summary>
+        /// Documentation for the Schema, if any. Null if there is no documentation.
+        /// </summary>
+        public virtual string Documentation { get; set; }
+
         /// <summary>
         /// Static class to return new instance of schema object
         /// </summary>
@@ -248,6 +254,7 @@ namespace Avro
         protected internal virtual void WriteJson(JsonTextWriter writer, SchemaNames names, string encspace)
         {
             writeStartObject(writer);
+            JsonHelper.writeIfNotNullOrEmpty(writer, "doc", this.Documentation);
             WriteJsonFields(writer, names, encspace);
             if (null != this.Props) Props.WriteJson(writer);
             writer.WriteEndObject();

@@ -53,6 +53,7 @@ namespace Avro
         {
             SchemaName name = NamedSchema.GetName(jtok, encspace);
             var aliases = NamedSchema.GetAliases(jtok, name.Space, name.EncSpace);
+            var doc = JsonHelper.GetOptionalString(jtok, "doc");
 
             JArray jsymbols = jtok["symbols"] as JArray;
             if (null == jsymbols)
@@ -70,7 +71,7 @@ namespace Avro
                 symbolMap[s] = i++;
                 symbols.Add(s);
             }
-            return new EnumSchema(name, aliases, symbols, symbolMap, props, names);
+            return new EnumSchema(name, aliases, doc, symbols, symbolMap, props, names);
         }
 
         /// <summary>
@@ -78,18 +79,20 @@ namespace Avro
         /// </summary>
         /// <param name="name">name of enum</param>
         /// <param name="aliases">list of aliases for the name</param>
+        /// <param name="doc"> documentation of enum schema</param>
         /// <param name="symbols">list of enum symbols</param>
         /// <param name="symbolMap">map of enum symbols and value</param>
         /// <param name="names">list of named schema already read</param>
-        private EnumSchema(SchemaName name, IList<SchemaName> aliases, List<string> symbols,
+        private EnumSchema(SchemaName name, IList<SchemaName> aliases, string doc, List<string> symbols,
                             IDictionary<String, int> symbolMap, PropertyMap props, SchemaNames names)
                             : base(Type.Enumeration, name, aliases, props, names)
         {
             if (null == name.Name) throw new SchemaParseException("name cannot be null for enum schema.");
+            this.Documentation = doc;
             this.Symbols = symbols;
             this.symbolMap = symbolMap;
         }
-
+        
         /// <summary>
         /// Writes enum schema in JSON format
         /// </summary>
