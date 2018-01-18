@@ -4,7 +4,7 @@
     <Description>Apache.Avro for Best internal use, support json.net 9.0+</Description>
     <Copyright>Copyright ? Apache 2013</Copyright>
     <AssemblyTitle>Best.Avro</AssemblyTitle>
-    <Version>1.8.1.5</Version>
+    <Version>1.8.1.6</Version>
     <Authors>BEST Logistics., Shi Jiyong</Authors>
     <TargetFrameworks>net35;net40;net45;net46;netstandard1.6;netstandard2.0</TargetFrameworks>
     <NoWarn>$(NoWarn);CS1570;CS1572;CS1573;CS1587;CS1591</NoWarn>
