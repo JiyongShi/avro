@@ -437,7 +437,7 @@ namespace Avro
             codens.Types.Add(ctd);
         }
 
-        private static CodeMemberMethod CreateRequestMethod()
+        private CodeMemberMethod CreateRequestMethod()
         {
             var requestMethod = new CodeMemberMethod();
             requestMethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
@@ -460,7 +460,7 @@ namespace Avro
             return requestMethod;
         }
 
-        private static void AddMethods(Protocol protocol, bool generateCallback, CodeTypeDeclaration ctd)
+        private void AddMethods(Protocol protocol, bool generateCallback, CodeTypeDeclaration ctd)
         {
             foreach (var e in protocol.Messages)
             {
@@ -475,8 +475,7 @@ namespace Avro
                 messageMember.Name = CodeGenUtil.Instance.Mangle(name);
                 messageMember.Attributes = MemberAttributes.Public | MemberAttributes.Abstract;
 
-                if (message.Doc!= null && message.Doc.Trim() != string.Empty)
-                    messageMember.Comments.Add(new CodeCommentStatement(message.Doc));
+                AddMethodDocumentation(message, messageMember, generateCallback);
 
                 if (message.Oneway.GetValueOrDefault() || generateCallback)
                 {
@@ -522,6 +521,55 @@ namespace Avro
                 var interfaceDoc = createDocComment(protocol.Doc);
                 if (interfaceDoc != null)
                     ctd.Comments.Add(interfaceDoc);
+            }
+        }
+
+        private void AddTypeDocumentation(Schema schema, CodeTypeDeclaration ctd)
+        {
+            // Add interface documentation
+            if (schema.Documentation != null && schema.Documentation.Trim() != string.Empty)
+            {
+                var typeDoc = createDocComment(schema.Documentation);
+                if (typeDoc != null)
+                    ctd.Comments.Add(typeDoc);
+            }
+        }
+
+        private void AddMethodDocumentation(Message message, CodeMemberMethod cmm, bool generateCallback)
+        {
+            // Add interface documentation
+            if (message.Doc != null && message.Doc.Trim() != string.Empty)
+            {
+                var methodDoc = createDocComment(message.Doc);
+                if (methodDoc != null)
+                    cmm.Comments.Add(methodDoc);
+            }
+
+            foreach (Field field in message.Request.Fields)
+            {
+                string fieldName = CodeGenUtil.Instance.Mangle(field.Name);
+                var paramDoc = createDocCommentForParam(fieldName, field.Documentation);
+                cmm.Comments.Add(paramDoc);
+            }
+
+            if (generateCallback)
+            {
+                var paramCallbackDoc = createDocCommentForParam("callback", "callback instance implement of ICallback");
+                cmm.Comments.Add(paramCallbackDoc);
+            }
+
+            if (message.Oneway.GetValueOrDefault() || generateCallback)
+            {
+                var returnsDoc = createDocCommentForReturns("Oneway or Callback, return void");
+                cmm.Comments.Add(returnsDoc);
+            }
+            else
+            {
+                bool ignored = false;
+                string type = getType(message.Response, false, ref ignored);
+                string text = string.Format("<see cref=\"{0}\"/>", type);
+                var returnsDoc = createDocCommentForReturns(text);
+                cmm.Comments.Add(returnsDoc);
             }
         }
 
@@ -813,6 +861,29 @@ namespace Avro
         protected virtual CodeCommentStatement createDocComment(string comment)
         {
             string text = string.Format("<summary>\r\n {0}\r\n </summary>", comment);
+            return new CodeCommentStatement(text, true);
+        }
+
+        /// <summary>
+        /// Creates an XML documentation for the given comment for Returns
+        /// </summary>
+        /// <param name="comment">comment</param>
+        /// <returns>CodeCommentStatement object</returns>
+        protected virtual CodeCommentStatement createDocCommentForReturns(string comment)
+        {
+            string text = string.Format("<returns>\r\n {0}\r\n </returns>", comment);
+            return new CodeCommentStatement(text, true);
+        }
+
+        /// <summary>
+        /// Creates an XML documentation for the given comment for Param
+        /// </summary>
+        /// <param name="paramName">paramName</param>
+        /// <param name="comment">comment</param>
+        /// <returns>CodeCommentStatement object</returns>
+        protected virtual CodeCommentStatement createDocCommentForParam(string paramName, string comment)
+        {
+            string text = string.Format("<param name=\"{0}\">{1}</param>", paramName, comment);
             return new CodeCommentStatement(text, true);
         }
 

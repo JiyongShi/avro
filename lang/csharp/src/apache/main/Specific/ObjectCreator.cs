@@ -106,7 +106,7 @@ namespace Avro.Specific
         /// <param name="name">the object type to locate</param>
         /// <param name="throwError">whether or not to throw an error if the type wasn't found</param>
         /// <returns>the object type, or <c>null</c> if not found</returns>
-        private Type FindType(string name,bool throwError)
+        private Type FindType(string name, bool throwError, string assemblyQualifiedName)
         {
             Type type;
 
@@ -116,6 +116,14 @@ namespace Avro.Specific
             name = name.Replace("IList", "System.Collections.Generic.IList`1");
             name = name.Replace("<", "[");
             name = name.Replace(">", "]");
+
+            // if assemblyQualifiedName set, use it first, used for Best.Avro for XingNG
+            if (!string.IsNullOrEmpty(assemblyQualifiedName) && assemblyQualifiedName.StartsWith("AQN:"))
+            {
+                type = Type.GetType(assemblyQualifiedName.Remove(0, 4));
+                if (type != null)
+                    return type;
+            }
 
             if (diffAssembly)
             {
@@ -176,83 +184,91 @@ namespace Avro.Specific
         /// <returns></returns>
         public Type GetType(Schema schema)
         {
-            switch(schema.Tag) {
-            case Schema.Type.Null:
-                break;
-            case Schema.Type.Boolean:
-                return typeof(bool);
-            case Schema.Type.Int:
-                return typeof(int);
-            case Schema.Type.Long:
-                return typeof(long);
-            case Schema.Type.Float:
-                return typeof(float);
-            case Schema.Type.Double:
-                return typeof(double);
-            case Schema.Type.Bytes:
-                return typeof(byte[]);
-            case Schema.Type.String:
-                return typeof(string);
-            case Schema.Type.Union:
-                {
-                    UnionSchema unSchema = schema as UnionSchema;
-                    if (null != unSchema && unSchema.Count==2)
+            switch (schema.Tag)
+            {
+                case Schema.Type.Null:
+                    break;
+                case Schema.Type.Boolean:
+                    return typeof(bool);
+                case Schema.Type.Int:
+                    return typeof(int);
+                case Schema.Type.Long:
+                    return typeof(long);
+                case Schema.Type.Float:
+                    return typeof(float);
+                case Schema.Type.Double:
+                    return typeof(double);
+                case Schema.Type.Bytes:
+                    return typeof(byte[]);
+                case Schema.Type.String:
+                    return typeof(string);
+                case Schema.Type.Union:
                     {
-                        Schema s1 = unSchema.Schemas[0];
-                        Schema s2 = unSchema.Schemas[1];
+                        UnionSchema unSchema = schema as UnionSchema;
+                        if (null != unSchema && unSchema.Count == 2)
+                        {
+                            Schema s1 = unSchema.Schemas[0];
+                            Schema s2 = unSchema.Schemas[1];
 
-                        // Nullable ?
-                        Type itemType = null;
-                        if (s1.Tag == Schema.Type.Null)
-                        {
-                            itemType = GetType(s2);
-                        }
-                        else if (s2.Tag == Schema.Type.Null)
-                        {
-                            itemType = GetType(s1);
-                        }
-
-                        if (null != itemType )
-                        {
-                            if (itemType.IsValueType && !itemType.IsEnum)
+                            // Nullable ?
+                            Type itemType = null;
+                            if (s1.Tag == Schema.Type.Null)
                             {
-                                try
-                                {
-                                    return GenericNullableType.MakeGenericType(new [] {itemType});
-                                }
-                                catch (Exception) { }
+                                itemType = GetType(s2);
+                            }
+                            else if (s2.Tag == Schema.Type.Null)
+                            {
+                                itemType = GetType(s1);
                             }
 
-                            return itemType;
+                            if (null != itemType)
+                            {
+                                if (itemType.IsValueType && !itemType.IsEnum)
+                                {
+                                    try
+                                    {
+                                        return GenericNullableType.MakeGenericType(new[] { itemType });
+                                    }
+                                    catch (Exception) { }
+                                }
+
+                                return itemType;
+                            }
                         }
+
+                        return typeof(object);
                     }
+                case Schema.Type.Array:
+                    {
+                        ArraySchema arrSchema = schema as ArraySchema;
+                        Type itemSchema = GetType(arrSchema.ItemSchema);
 
-                    return typeof(object);
-                }
-            case Schema.Type.Array: {
-                ArraySchema arrSchema = schema as ArraySchema;
-                Type itemSchema = GetType(arrSchema.ItemSchema);
+                        return GenericListType.MakeGenericType(new[] { itemSchema });
+                    }
+                case Schema.Type.Map:
+                    {
+                        MapSchema mapSchema = schema as MapSchema;
+                        Type itemSchema = GetType(mapSchema.ValueSchema);
 
-                return GenericListType.MakeGenericType(new [] {itemSchema}); }
-            case Schema.Type.Map: {
-                MapSchema mapSchema = schema as MapSchema;
-                Type itemSchema = GetType(mapSchema.ValueSchema);
-
-                return GenericMapType.MakeGenericType(new [] { typeof(string), itemSchema }); }
-            case Schema.Type.Enumeration:
-            case Schema.Type.Record:
-            case Schema.Type.Fixed:
-            case Schema.Type.Error: {
-                // Should all be named types
-                var named = schema as NamedSchema;
-                if(null!=named) {
-                    return FindType(named.Fullname,true);
-                }
-                break; }
+                        return GenericMapType.MakeGenericType(new[] { typeof(string), itemSchema });
+                    }
+                case Schema.Type.Enumeration:
+                case Schema.Type.Record:
+                case Schema.Type.Fixed:
+                case Schema.Type.Error:
+                    {
+                        // Should all be named types
+                        var named = schema as NamedSchema;
+                        if (null != named)
+                        {
+                            return FindType(named.Fullname, true, schema.Documentation);
+                        }
+                        break;
+                    }
             }
 
             // Fallback
-            return FindType(schema.Name,true);
+            return FindType(schema.Name, true, schema.Documentation);
         }
 
         /// <summary>
@@ -261,9 +277,16 @@ namespace Avro.Specific
         /// <param name="name">name of the object to get type of</param>
         /// <param name="schemaType">schema type for the object</param>
         /// <returns>Type</returns>
-        public Type GetType(string name, Schema.Type schemaType)
+        public Type GetType(string name, Schema.Type schemaType, string assemblyQualifiedName)
         {
-            Type type = FindType(name, true);
+            Type type = FindType(name, true, assemblyQualifiedName);
+
+            if (!string.IsNullOrEmpty(assemblyQualifiedName) && assemblyQualifiedName.StartsWith("AQN:")
+                                                             && (schemaType == Schema.Type.Map ||
+                                                                 schemaType == Schema.Type.Array))
+            {
+                type = type.GetGenericTypeDefinition();
+            }
 
             if (schemaType == Schema.Type.Map)
             {
@@ -271,7 +294,7 @@ namespace Avro.Specific
             }
             else if (schemaType == Schema.Type.Array)
             {
-                type = GenericListType.MakeGenericType(new [] {type});
+                type = GenericListType.MakeGenericType(new[] { type });
             }
 
             return type;
@@ -283,9 +306,9 @@ namespace Avro.Specific
         /// <param name="name">fully qualified name of the type</param>
         /// <param name="schemaType">type of schema</param>
         /// <returns>new object of the given type</returns>
-        public object New(string name, Schema.Type schemaType)
+        public object New(string name, Schema.Type schemaType, string assemblyQualifiedName)
         {
-            return Activator.CreateInstance(GetType(name, schemaType));
+            return Activator.CreateInstance(GetType(name, schemaType, assemblyQualifiedName));
         }
     }
 }

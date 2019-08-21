@@ -88,15 +88,17 @@ namespace Avro.Specific
         private class SpecificRecordAccess : RecordAccess
         {
             private string typeName;
+            private string assemblyQualifiedName;
 
             public SpecificRecordAccess(RecordSchema readerSchema)
             {
                 typeName = readerSchema.Fullname;
+                assemblyQualifiedName = readerSchema.Documentation;
             }
 
             public object CreateRecord(object reuse)
             {
-                return reuse ?? ObjectCreator.Instance.New(typeName, Schema.Type.Record);
+                return reuse ?? ObjectCreator.Instance.New(typeName, Schema.Type.Record, assemblyQualifiedName);
             }
 
             public object GetField(object record, string fieldName, int fieldPos)
@@ -113,15 +115,17 @@ namespace Avro.Specific
         private class SpecificFixedAccess : FixedAccess
         {
             private string typeName;
+            private string assemblyQualifiedName;
 
             public SpecificFixedAccess(FixedSchema readerSchema)
             {
                 typeName = readerSchema.Fullname;
+                assemblyQualifiedName = readerSchema.Documentation;
             }
 
             public object CreateFixed(object reuse)
             {
-                return reuse ?? ObjectCreator.Instance.New(typeName, Schema.Type.Fixed);
+                return reuse ?? ObjectCreator.Instance.New(typeName, Schema.Type.Fixed, assemblyQualifiedName);
             }
 
             public byte[] GetFixedBuffer(object rec)
@@ -133,6 +137,7 @@ namespace Avro.Specific
         private class SpecificArrayAccess : ArrayAccess
         {
             private string typeName;
+            private string assemblyQualifiedName;
 
             public SpecificArrayAccess(ArraySchema readerSchema)
             {
@@ -142,6 +147,7 @@ namespace Avro.Specific
                 type = type.Remove(type.Length - 1);   // remove >
 
                 typeName = type;
+                assemblyQualifiedName = readerSchema.Documentation;
             }
 
             public object Create(object reuse)
@@ -158,7 +164,7 @@ namespace Avro.Specific
                     array.Clear();
                 }
                 else
-                    array = ObjectCreator.Instance.New(typeName, Schema.Type.Array) as IList;
+                    array = ObjectCreator.Instance.New(typeName, Schema.Type.Array, assemblyQualifiedName) as IList;
                 return array;
             }
 
@@ -185,6 +191,7 @@ namespace Avro.Specific
         private class SpecificMapAccess : MapAccess
         {
             private string typeName;
+            private string assemblyQualifiedName;
 
             public SpecificMapAccess(MapSchema readerSchema)
             {
@@ -194,6 +201,7 @@ namespace Avro.Specific
                 type = type.Remove(type.Length - 1);   // remove >
 
                 typeName = type;
+                assemblyQualifiedName = readerSchema.Documentation;
             }
 
             public object Create(object reuse)
@@ -208,7 +216,7 @@ namespace Avro.Specific
                     map.Clear();
                 }
                 else
-                    map = ObjectCreator.Instance.New(typeName, Schema.Type.Map) as System.Collections.IDictionary;
+                    map = ObjectCreator.Instance.New(typeName, Schema.Type.Map, assemblyQualifiedName) as System.Collections.IDictionary;
                 return map;
             }
 

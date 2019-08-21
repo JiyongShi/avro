@@ -104,7 +104,7 @@ namespace Avro.Specific
             if (rs.Name == null)
                 return base.ReadRecord(reuse, writerSchema, readerSchema, dec);
 
-            ISpecificRecord rec = (reuse != null ? reuse : ObjectCreator.Instance.New(rs.Fullname, Schema.Type.Record)) as ISpecificRecord;
+            ISpecificRecord rec = (reuse != null ? reuse : ObjectCreator.Instance.New(rs.Fullname, Schema.Type.Record,readerSchema.Documentation)) as ISpecificRecord;
             object obj;
             foreach (Field wf in writerSchema)
             {
@@ -163,7 +163,7 @@ namespace Avro.Specific
                     ", reader: " + readerSchema);
             }
 
-            SpecificFixed fixedrec = (reuse != null ? reuse : ObjectCreator.Instance.New(rs.Fullname, Schema.Type.Fixed)) as SpecificFixed;
+            SpecificFixed fixedrec = (reuse != null ? reuse : ObjectCreator.Instance.New(rs.Fullname, Schema.Type.Fixed,rs.Documentation)) as SpecificFixed;
             d.ReadFixed(fixedrec.Value);
             return fixedrec;
         }
@@ -203,7 +203,7 @@ namespace Avro.Specific
                 array.Clear();
             }
             else
-                array = ObjectCreator.Instance.New(getTargetType(readerSchema), Schema.Type.Array) as System.Collections.IList;
+                array = ObjectCreator.Instance.New(getTargetType(readerSchema), Schema.Type.Array,rs.Documentation) as System.Collections.IList;
 
             int i = 0;
             for (int n = (int)dec.ReadArrayStart(); n != 0; n = (int)dec.ReadArrayNext())
@@ -236,7 +236,7 @@ namespace Avro.Specific
                 map.Clear();
             }
             else
-                map = ObjectCreator.Instance.New(getTargetType(readerSchema), Schema.Type.Map) as System.Collections.IDictionary;
+                map = ObjectCreator.Instance.New(getTargetType(readerSchema), Schema.Type.Map,rs.Documentation) as System.Collections.IDictionary;
 
             for (int n = (int)d.ReadMapStart(); n != 0; n = (int)d.ReadMapNext())
             {

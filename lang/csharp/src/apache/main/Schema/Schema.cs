@@ -74,7 +74,13 @@ namespace Avro
         /// If this is a record, enum or fixed, returns its name, otherwise the name the primitive type. 
         /// </summary>
         public abstract string Name { get; }
-        
+
+
+        /// <summary>
+        /// Documentation for the Schema, if any. Null if there is no documentation.
+        /// </summary>
+        public virtual string Documentation { get; set; }
+
         /// <summary>
         /// The name of this schema. If this is a named schema such as an enum, it returns the fully qualified
         /// name for the schema. For other schemas, it returns the type of the schema.
@@ -256,6 +262,7 @@ namespace Avro
         protected internal virtual void WriteJson(JsonTextWriter writer, SchemaNames names, string encspace)
         {
             writeStartObject(writer);
+            JsonHelper.writeIfNotNullOrEmpty(writer, "doc", this.Documentation);
             WriteJsonFields(writer, names, encspace);
             if (null != this.Props) Props.WriteJson(writer);
             writer.WriteEndObject();
