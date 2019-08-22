@@ -281,13 +281,6 @@ namespace Avro.Specific
         {
             Type type = FindType(name, true, assemblyQualifiedName);
 
-            if (!string.IsNullOrEmpty(assemblyQualifiedName) && assemblyQualifiedName.StartsWith("AQN:")
-                                                             && (schemaType == Schema.Type.Map ||
-                                                                 schemaType == Schema.Type.Array))
-            {
-                type = type.GetGenericTypeDefinition();
-            }
-
             if (schemaType == Schema.Type.Map)
             {
                 type = GenericMapType.MakeGenericType(new[] { typeof(string), type });
