@@ -284,7 +284,7 @@ namespace Avro.Specific
         public Type GetType(string name, Schema.Type schemaType, string assemblyQualifiedName)
         {
             NameCtorKey key = new NameCtorKey(name + assemblyQualifiedName, schemaType);
-            if (!_typeCache.TryGetValue(key, out var cacheType))
+            if (_typeCache.TryGetValue(key, out var cacheType))
             {
                 return cacheType;
             }
