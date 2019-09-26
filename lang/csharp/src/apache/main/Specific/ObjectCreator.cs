@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -271,14 +272,23 @@ namespace Avro.Specific
             return FindType(schema.Name, true, schema.Documentation);
         }
 
+        ConcurrentDictionary<NameCtorKey, Type> _typeCache = new ConcurrentDictionary<NameCtorKey, Type>();
+
         /// <summary>
         /// Gets the type of the specified type name
         /// </summary>
         /// <param name="name">name of the object to get type of</param>
         /// <param name="schemaType">schema type for the object</param>
+        /// <param name="assemblyQualifiedName">assemblyQualifiedName used for schema type load</param>
         /// <returns>Type</returns>
         public Type GetType(string name, Schema.Type schemaType, string assemblyQualifiedName)
         {
+            NameCtorKey key = new NameCtorKey(name + assemblyQualifiedName, schemaType);
+            if (!_typeCache.TryGetValue(key, out var cacheType))
+            {
+                return cacheType;
+            }
+
             Type type = FindType(name, true, assemblyQualifiedName);
 
             if (schemaType == Schema.Type.Map)
@@ -290,6 +300,8 @@ namespace Avro.Specific
                 type = GenericListType.MakeGenericType(new[] { type });
             }
 
+            _typeCache.TryAdd(key, type);
+
             return type;
         }
 
@@ -298,6 +310,7 @@ namespace Avro.Specific
         /// </summary>
         /// <param name="name">fully qualified name of the type</param>
         /// <param name="schemaType">type of schema</param>
+        /// <param name="assemblyQualifiedName">assemblyQualifiedName used for schema type load</param>
         /// <returns>new object of the given type</returns>
         public object New(string name, Schema.Type schemaType, string assemblyQualifiedName)
         {
