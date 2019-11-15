@@ -30,7 +30,7 @@ namespace Avro.Test
 
     class CodeGenTest
     {
-#if !NETCOREAPP2_0 // System.CodeDom compilation not supported in .NET Core: https://github.com/dotnet/corefx/issues/12180
+#if !NETCOREAPP2_0 && !NETCOREAPP3_0 // System.CodeDom compilation not supported in .NET Core: https://github.com/dotnet/corefx/issues/12180
         [TestCase(@"{
 ""type"" : ""record"",
 ""name"" : ""ClassKeywords"",
